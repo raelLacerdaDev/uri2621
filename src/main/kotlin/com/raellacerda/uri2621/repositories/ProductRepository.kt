@@ -1,6 +1,7 @@
 package com.raellacerda.uri2621.repositories
 
 
+import com.raellacerda.uri2621.dtos.ProductMinDto
 import com.raellacerda.uri2621.entities.Product
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -17,6 +18,12 @@ interface ProductRepository : JpaRepository<Product, Long> {
         """
     )
     fun findByAmountRange(
+        @Param("min") min: Int,
+        @Param("max") max: Int
+    ): List<String>
+
+    @Query("SELECT obj.name FROM Product obj JOIN obj.provider WHERE obj.amount BETWEEN :min AND :max ")
+    fun findByAmountRangeJPQL(
         @Param("min") min: Int,
         @Param("max") max: Int
     ): List<String>
