@@ -1,7 +1,7 @@
 package com.raellacerda.uri2621.repositories
 
 
-import com.raellacerda.uri2621.dtos.ProductMinDto
+
 import com.raellacerda.uri2621.entities.Product
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -15,6 +15,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
             FROM products AS prod
             INNER JOIN providers AS prov on prod.id_providers = prov.id
             WHERE prod.amount BETWEEN :min AND :max
+            AND prov.name LIKE 'P%'
         """
     )
     fun findByAmountRange(
@@ -22,7 +23,7 @@ interface ProductRepository : JpaRepository<Product, Long> {
         @Param("max") max: Int
     ): List<String>
 
-    @Query("SELECT obj.name FROM Product obj JOIN obj.provider WHERE obj.amount BETWEEN :min AND :max ")
+    @Query("SELECT obj.name FROM Product obj JOIN obj.provider WHERE obj.amount BETWEEN :min AND :max AND obj.provider.name LIKE 'P%'")
     fun findByAmountRangeJPQL(
         @Param("min") min: Int,
         @Param("max") max: Int
